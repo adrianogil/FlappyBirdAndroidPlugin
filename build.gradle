@@ -1,0 +1,46 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.5.0'
+    }
+}
+apply plugin: 'android-library'
+
+android {
+
+	def KEY_PATH = '';
+	def AAR_PATH = '';
+
+	if (System.getProperty('os.name').contains('Windows')) {
+		KEY_PATH = '' + rootDir + '\\key\\';
+		AAR_PATH = '' + rootDir + '\\..\\FlappyBird\\Assets\\Plugins\\Android\\';
+	} else {
+		KEY_PATH = '' + rootDir + '/key/';
+		AAR_PATH = '' + rootDir + '/../FlappyBird/Assets/Plugins/Android/';
+	}
+
+	lintOptions {
+		abortOnError false
+	}
+
+	assembleRelease.doLast {
+		copy {
+			from('build/outputs/aar') {
+				include '*.aar'
+			}
+		into AAR_PATH
+		}
+	}
+
+    compileSdkVersion 'android-24'
+    buildToolsVersion '24.0.0'
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFile getDefaultProguardFile('proguard-android.txt')
+        }
+    }
+}
